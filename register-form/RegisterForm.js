@@ -1,54 +1,115 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import {
-  KeyboardAvoidingView,
+  Button,
   SafeAreaView,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 
-import { Formik } from "formik";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import React from "react";
-import { StatusBar } from "expo-status-bar";
-import { styles } from "./styles";
-import { validationSchema } from "./validation";
+import { Formik } from 'formik';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { BACKEND_URL } from '../config';
+import AuthContext from '../store/global/state';
+import styles from './styles';
+import { validationSchema } from './validation';
 
-const ErrorMessage = ({ errorValue }) => {
+export function ErrorMessage({ errorValue }) {
   return errorValue ? (
     <View style={styles.errorContainer}>
       <Text style={styles.errorText}>{errorValue}</Text>
     </View>
   ) : null;
+}
+ErrorMessage.propTypes = {
+  errorValue: PropTypes.string.isRequired,
 };
 
 export default function RegisterForm() {
-  function onSubmitHandler(values) {
-    console.log(values);
-  }
+  const { dispatch } = React.useContext(AuthContext);
+
+  const initialState = {
+    isSubmitting: false,
+    errorMessage: null,
+  };
+  // eslint-disable-next-line no-unused-vars
+  const [data, setData] = React.useState(initialState);
+
+  const handleFormSubmit = (values) => {
+    console.log('handle submit');
+    setData({
+      isSubmitting: true,
+      errorMessage: null,
+    });
+    fetch(`${BACKEND_URL}api/register`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log(`resjson = ${JSON.stringify(res.json())}`);
+          return fetch(`${BACKEND_URL}api/api-token-auth/`, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          });
+        }
+        throw res;
+      })
+      .then((resJson) => {
+        console.log(`token json = ${resJson}`);
+        dispatch({
+          type: 'REGISTER',
+          payload: resJson,
+        });
+      })
+      .catch((error) => {
+        setData({
+          isSubmitting: false,
+          errorMessage: error.message || error.statusText,
+        });
+      });
+  };
 
   return (
     <>
       <SafeAreaView style={styles.topSafeArea} />
-
+      {/* eslint-disable react/style-prop-object */}
       <StatusBar style="light" />
-
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>fatcork SignUp</Text>
         </View>
-
         {/* https://formik.org/docs/overview */}
         <Formik
           initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
           }}
-          onSubmit={(values, actions) => {
-            onSubmitHandler(values, actions);
+          onSubmit={(values) => {
+            // onSubmitHandler(values, actions);
+            handleFormSubmit(values);
           }}
           validationSchema={validationSchema}
         >
@@ -71,8 +132,8 @@ export default function RegisterForm() {
                 <TextInput
                   style={styles.input}
                   value={values.firstName}
-                  onChangeText={handleChange("firstName")}
-                  onBlur={handleBlur("firstName")}
+                  onChangeText={handleChange('firstName')}
+                  onBlur={handleBlur('firstName')}
                 />
 
                 <ErrorMessage
@@ -86,8 +147,8 @@ export default function RegisterForm() {
                 <TextInput
                   style={styles.input}
                   value={values.lastName}
-                  onChangeText={handleChange("lastName")}
-                  onBlur={handleBlur("lastName")}
+                  onChangeText={handleChange('lastName')}
+                  onBlur={handleBlur('lastName')}
                 />
               </View>
 
@@ -97,8 +158,8 @@ export default function RegisterForm() {
                 <TextInput
                   style={styles.input}
                   value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
                   autoCapitalize="none"
                 />
 
@@ -111,10 +172,10 @@ export default function RegisterForm() {
                 <TextInput
                   style={styles.input}
                   value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
                   autoCapitalize="none"
-                  secureTextEntry={true}
+                  secureTextEntry
                 />
 
                 <ErrorMessage
@@ -128,20 +189,26 @@ export default function RegisterForm() {
                 <TextInput
                   style={styles.input}
                   value={values.confirmPassword}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
                   autoCapitalize="none"
-                  secureTextEntry={true}
+                  secureTextEntry
                 />
 
                 <ErrorMessage
                   errorValue={touched.confirmPassword && errors.confirmPassword}
                 />
               </View>
-
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <View>
+                <Button
+                  title="Submit"
+                  style={styles.input}
+                  onPress={handleSubmit}
+                />
+              </View>
+              {/* <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>SUBMIT</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </KeyboardAwareScrollView>
           )}
         </Formik>

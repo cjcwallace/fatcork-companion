@@ -1,10 +1,11 @@
-import { StyleSheet, ViewStyle, Platform } from "react-native";
-import Constants from "expo-constants";
+import { Platform, StyleSheet, ViewStyle } from 'react-native';
 
-const HEADER_BACKGROUND = "#3498db";
-const CONTENT_BACKGROUND = "#f9f9f9";
+import Constants from 'expo-constants';
 
-export const styles = StyleSheet.create({
+const HEADER_BACKGROUND = '#3498db';
+const CONTENT_BACKGROUND = '#f9f9f9';
+
+const styles = StyleSheet.create({
   topSafeArea: {
     backgroundColor: HEADER_BACKGROUND,
   },
@@ -12,16 +13,16 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Constants.statusBarHeight,
     backgroundColor:
-      Platform.OS === "ios" ? CONTENT_BACKGROUND : HEADER_BACKGROUND,
+      Platform.OS === 'ios' ? CONTENT_BACKGROUND : HEADER_BACKGROUND,
   },
   header: {
     height: 60,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: HEADER_BACKGROUND,
   },
   headerText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
   },
   content: {
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    color: "#7d7e79",
+    color: '#7d7e79',
     fontSize: 16,
     lineHeight: 30,
   },
@@ -41,25 +42,21 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: "#e3e3e3",
-    backgroundColor: "#fff",
-  },
-  errorContainer: {
-    marginVertical: 5,
-  },
-  errorText: {
-    color: "#ff7675",
+    borderColor: '#e3e3e3',
+    backgroundColor: '#fff',
   },
   button: {
     marginTop: 20,
-    backgroundColor: "#2980b9",
+    backgroundColor: '#2980b9',
     padding: 15,
     borderRadius: 15,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
+
+export default styles;
