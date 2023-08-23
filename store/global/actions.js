@@ -1,0 +1,18 @@
+export const authActionTypes = {
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  RESTORE_TOKEN: 'RESTORE_TOKEN',
+  REGISTER: 'REGISTER',
+};
+
+export const cuveeActionTypes = {
+  REQUEST: 'FETCH_CUVEE_REQUEST',
+  SUCCESS: 'FETCH_CUVEE_SUCCESS',
+  FAILURE: 'FETCH_CUVEE_FAILURE',
+};
+
+export const vendorActionTypes = {
+  REQUEST: 'FETCH_VENDOR_REQUEST',
+  SUCCESS: 'FETCH_VENDOR_SUCCESS',
+  FAILURE: 'FETCH_VENDOR_FAILURE',
+};
