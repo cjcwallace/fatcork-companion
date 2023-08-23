@@ -1,5 +1,3 @@
-// import * as SecureStore from 'expo-secure-store';
-
 import {
   Image,
   SafeAreaView,
@@ -12,34 +10,32 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { BACKEND_URL } from '../config';
 import AuthContext from '../store/global/state';
-import { cuveeReducer } from '../store/global/reducer';
 import { styles } from './styles';
-
-// import { SecureStoreEnum } from '../utils/SecureStore';
+import { vendorReducer } from '../store/global/reducer';
 
 const initialState = {
-  cuvees: [],
+  vendors: [],
   isFetching: false,
   hasError: false,
 };
 
 // const reducer = (state, action) => {
-//   { console.log(` type = ${action.type}`); }
+//   console.log(` type = ${action.type}`);
 //   switch (action.type) {
-//     case 'FETCH_CUVEE_REQUEST':
+//     case 'FETCH_VENDOR_REQUEST':
 //       return {
 //         ...state,
 //         isFetching: true,
 //         hasError: false,
 //       };
-//     case 'FETCH_CUVEE_SUCCESS':
-//       { console.log('success'); }
+//     case 'FETCH_VENDOR_SUCCESS':
+//       console.log('success');
 //       return {
 //         ...state,
 //         isFetching: false,
-//         cuvees: action.payload,
+//         vendors: action.payload,
 //       };
-//     case 'FETCH_CUVEE_FAILURE':
+//     case 'FETCH_VENDOR_FAILURE':
 //       return {
 //         ...state,
 //         hasError: true,
@@ -50,22 +46,16 @@ const initialState = {
 //   }
 // };
 
-export default function CuveeList() {
+export default function VendorList() {
   const { state: authState } = React.useContext(AuthContext);
-  const [state, dispatch] = React.useReducer(cuveeReducer, initialState);
-
-  // const cuveeList = React.useMemo(
-  //   ()
-  // )
-
-  // const [value, onChangeValue] = React.useState('Your value here');
+  const [state, dispatch] = React.useReducer(vendorReducer, initialState);
 
   React.useEffect(() => {
     console.log(` token ${authState.token}`);
     dispatch({
-      type: 'FETCH_CUVEE_REQUEST',
+      type: 'FETCH_VENDOR_REQUEST',
     });
-    fetch(`${BACKEND_URL}cuvee_list/`, {
+    fetch(`${BACKEND_URL}vendor_list/`, {
       headers: {
         Authorization: ` Token ${authState.token}`,
       },
@@ -77,15 +67,16 @@ export default function CuveeList() {
         throw res;
       })
       .then((resJson) => {
+        console.log(resJson);
         dispatch({
-          type: 'FETCH_CUVEE_SUCCESS',
+          type: 'FETCH_VENDOR_SUCCESS',
           payload: resJson,
         });
       })
       .catch((error) => {
         console.log(error);
         dispatch({
-          type: 'FETCH_CUVEE_FAILURE',
+          type: 'FETCH_VENDOR_FAILURE',
         });
       });
   }, [authState.token]);
@@ -104,19 +95,19 @@ export default function CuveeList() {
           showsVerticalScrollIndicator={false}
         >
           {console.log(`isfetching ${state.isFetching}`)}
-          {console.log(`cuvees ${state.cuvees[0]}`)}
+          {console.log(`vendors ${state.vendors[0]}`)}
           {state.isFetching ? (
             <Text>LOADING...</Text>
           ) : (
             <View style={styles.cuveeList}>
-              {state.cuvees?.map((_cuvee) => (
-                <View style={styles.bottleView} key={`cuvee${_cuvee.id}`}>
+              {state.vendors?.map((_vendor) => (
+                <View style={styles.bottleView} key={`vendor${_vendor.id}`}>
                   <Image
-                    key={`img${_cuvee.id}`}
-                    source={_cuvee.image_src ? { uri: _cuvee.image_src } : placeholder}
+                    key={`img${_vendor.id}`}
+                    source={_vendor.image_src ? { uri: _vendor.image_src } : placeholder}
                     style={styles.imageLogo}
                   />
-                  <Text style={styles.bottleName} key={`title${_cuvee.id}`}>{_cuvee.title}</Text>
+                  <Text style={styles.bottleName} key={`title${_vendor.id}`}>{_vendor.name}</Text>
                 </View>
               ))}
             </View>
