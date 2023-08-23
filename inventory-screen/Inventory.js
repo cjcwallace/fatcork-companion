@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { BACKEND_URL } from '../config';
 import AuthContext from '../store/global/state';
 import { cuveeReducer } from '../store/global/reducer';
-import { styles } from './styles';
+import styles from './styles';
 
 // import { SecureStoreEnum } from '../utils/SecureStore';
 
