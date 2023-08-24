@@ -1,19 +1,23 @@
 // import * as SecureStore from 'expo-secure-store';
+/* eslint-disable import/no-extraneous-dependencies */
 
 import {
   Image,
+  Pressable,
   SafeAreaView,
   Text,
   View,
 } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
+import { inventoryReducer } from '../store/global/reducer';
+import styles from './styles';
 import { BACKEND_URL } from '../config';
 import AuthContext from '../store/global/state';
-import { cuveeReducer } from '../store/global/reducer';
-import styles from './styles';
 
 // import { SecureStoreEnum } from '../utils/SecureStore';
 
@@ -23,36 +27,11 @@ const initialState = {
   hasError: false,
 };
 
-// const reducer = (state, action) => {
-//   { console.log(` type = ${action.type}`); }
-//   switch (action.type) {
-//     case 'FETCH_CUVEE_REQUEST':
-//       return {
-//         ...state,
-//         isFetching: true,
-//         hasError: false,
-//       };
-//     case 'FETCH_CUVEE_SUCCESS':
-//       { console.log('success'); }
-//       return {
-//         ...state,
-//         isFetching: false,
-//         cuvees: action.payload,
-//       };
-//     case 'FETCH_CUVEE_FAILURE':
-//       return {
-//         ...state,
-//         hasError: true,
-//         isFetching: false,
-//       };
-//     default:
-//       return state;
-//   }
-// };
-
 export default function CuveeList() {
+  const navigation = useNavigation();
+
   const { state: authState } = React.useContext(AuthContext);
-  const [state, dispatch] = React.useReducer(cuveeReducer, initialState);
+  const [state, dispatch] = React.useReducer(inventoryReducer, initialState);
 
   // const cuveeList = React.useMemo(
   //   ()
@@ -63,7 +42,7 @@ export default function CuveeList() {
   React.useEffect(() => {
     console.log(` token ${authState.token}`);
     dispatch({
-      type: 'FETCH_CUVEE_REQUEST',
+      type: 'FETCH_INVENTORY_REQUEST',
     });
     fetch(`${BACKEND_URL}cuvee_list/`, {
       headers: {
@@ -78,14 +57,14 @@ export default function CuveeList() {
       })
       .then((resJson) => {
         dispatch({
-          type: 'FETCH_CUVEE_SUCCESS',
+          type: 'FETCH_INVENTORY_SUCCESS',
           payload: resJson,
         });
       })
       .catch((error) => {
         console.log(error);
         dispatch({
-          type: 'FETCH_CUVEE_FAILURE',
+          type: 'FETCH_INVENTORY_FAILURE',
         });
       });
   }, [authState.token]);
@@ -104,20 +83,32 @@ export default function CuveeList() {
           showsVerticalScrollIndicator={false}
         >
           {console.log(`isfetching ${state.isFetching}`)}
-          {console.log(`cuvees ${state.cuvees[0]}`)}
+          {console.log(`cuvees ${JSON.stringify(state.cuvees[0])}`)}
           {state.isFetching ? (
             <Text>LOADING...</Text>
           ) : (
             <View style={styles.cuveeList}>
               {state.cuvees?.map((_cuvee) => (
-                <View style={styles.bottleView} key={`cuvee${_cuvee.id}`}>
-                  <Image
-                    key={`img${_cuvee.id}`}
-                    source={_cuvee.image_src ? { uri: _cuvee.image_src } : placeholder}
-                    style={styles.imageLogo}
-                  />
-                  <Text style={styles.bottleName} key={`title${_cuvee.id}`}>{_cuvee.title}</Text>
-                </View>
+                <Pressable
+                  key={`pressable_${_cuvee.id}`}
+                  onPress={() => {
+                    console.log(`pressed ${_cuvee.id}`);
+                    navigation.navigate('CuveeScreen', {
+                      itemId: _cuvee.id,
+                      // otherParam: 'anything you want here',
+                    });
+                  }}
+                  style={styles.bottleView}
+                >
+                  <View key={`cuvee_${_cuvee.id}`}>
+                    <Image
+                      key={`img_${_cuvee.id}`}
+                      source={_cuvee.image_src ? { uri: _cuvee.image_src } : placeholder}
+                      style={styles.imageLogo}
+                    />
+                    <Text style={styles.bottleName} key={`title_${_cuvee.id}`}>{_cuvee.title}</Text>
+                  </View>
+                </Pressable>
               ))}
             </View>
           )}
@@ -126,3 +117,7 @@ export default function CuveeList() {
     </>
   );
 }
+
+CuveeList.propTypes = {
+  // navigation: PropTypes.func.isRequired,
+};
