@@ -11,6 +11,12 @@ export const cuveeActionTypes = {
   FAILURE: 'FETCH_CUVEE_FAILURE',
 };
 
+export const inventoryActionTypes = {
+  REQUEST: 'FETCH_INVENTORY_REQUEST',
+  SUCCESS: 'FETCH_INVENTORY_SUCCESS',
+  FAILURE: 'FETCH_INVENTORY_FAILURE',
+};
+
 export const vendorActionTypes = {
   REQUEST: 'FETCH_VENDOR_REQUEST',
   SUCCESS: 'FETCH_VENDOR_SUCCESS',
