@@ -10,7 +10,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { BACKEND_URL } from '../config';
 import AuthContext from '../store/global/state';
-import { styles } from './styles';
+import styles from './styles';
 import { vendorReducer } from '../store/global/reducer';
 
 const initialState = {
@@ -18,33 +18,6 @@ const initialState = {
   isFetching: false,
   hasError: false,
 };
-
-// const reducer = (state, action) => {
-//   console.log(` type = ${action.type}`);
-//   switch (action.type) {
-//     case 'FETCH_VENDOR_REQUEST':
-//       return {
-//         ...state,
-//         isFetching: true,
-//         hasError: false,
-//       };
-//     case 'FETCH_VENDOR_SUCCESS':
-//       console.log('success');
-//       return {
-//         ...state,
-//         isFetching: false,
-//         vendors: action.payload,
-//       };
-//     case 'FETCH_VENDOR_FAILURE':
-//       return {
-//         ...state,
-//         hasError: true,
-//         isFetching: false,
-//       };
-//     default:
-//       return state;
-//   }
-// };
 
 export default function VendorList() {
   const { state: authState } = React.useContext(AuthContext);
