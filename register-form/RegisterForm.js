@@ -26,60 +26,40 @@ export function ErrorMessage({ errorValue }) {
   ) : null;
 }
 ErrorMessage.propTypes = {
-  errorValue: PropTypes.string.isRequired,
+  errorValue: PropTypes.string,
+};
+ErrorMessage.defaultProps = {
+  errorValue: null,
 };
 
 export default function RegisterForm() {
   const { dispatch } = React.useContext(AuthContext);
 
   const initialState = {
+    firstName: null,
+    lastName: null,
+    email: null,
+    id: null,
+    token: null,
     isSubmitting: false,
     errorMessage: null,
   };
   // eslint-disable-next-line no-unused-vars
   const [data, setData] = React.useState(initialState);
 
-  const handleFormSubmit = (values) => {
-    console.log('handle submit');
-    setData({
-      isSubmitting: true,
-      errorMessage: null,
-    });
-    fetch(`${BACKEND_URL}api/register`, {
+  async function callAPI(values, props) {
+    const result = fetch(`${BACKEND_URL}${props.url}`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
-      }),
+      body: props.body,
     })
       .then((res) => {
         if (res.ok) {
-          console.log(`resjson = ${JSON.stringify(res.json())}`);
-          return fetch(`${BACKEND_URL}api/api-token-auth/`, {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: values.email,
-              password: values.password,
-            }),
-          });
+          return res.json();
         }
         throw res;
-      })
-      .then((resJson) => {
-        console.log(`token json = ${resJson}`);
-        dispatch({
-          type: 'REGISTER',
-          payload: resJson,
-        });
       })
       .catch((error) => {
         setData({
@@ -87,6 +67,40 @@ export default function RegisterForm() {
           errorMessage: error.message || error.statusText,
         });
       });
+    return result;
+  }
+
+  const handleFormSubmit = async (values) => {
+    console.log('handle submit');
+    setData({
+      ...data,
+      isSubmitting: true,
+      errorMessage: null,
+    });
+    const register = await callAPI(values, {
+      url: 'api/register',
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+      }),
+    });
+    console.log(`register results ====== ${JSON.stringify(register)}`);
+    const token = await callAPI(values, {
+      url: 'api/api-token-auth/',
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    });
+    console.log(`token results ====== ${JSON.stringify(token)}`);
+    const payload = { ...register, ...token };
+    console.log(`payload ====== ${JSON.stringify(payload)}`);
+    dispatch({
+      type: 'REGISTER',
+      payload,
+    });
   };
 
   return (
@@ -101,11 +115,11 @@ export default function RegisterForm() {
         {/* https://formik.org/docs/overview */}
         <Formik
           initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
+            firstName: 'cam',
+            lastName: 'wall',
+            email: '1231@me.com',
+            password: 'password',
+            confirmPassword: 'password',
           }}
           onSubmit={(values) => {
             // onSubmitHandler(values, actions);
