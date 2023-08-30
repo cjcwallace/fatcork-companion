@@ -26,7 +26,7 @@ ErrorMessage.propTypes = {
   errorValue: PropTypes.string.isRequired,
 };
 
-export default function LoginForm() {
+export default function LoginFormScreen() {
   const { dispatch } = React.useContext(AuthContext);
 
   const initialState = {

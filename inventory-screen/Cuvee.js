@@ -97,7 +97,7 @@ export default function CuveeScreen({ route }) {
                 {state.cuvee.vendor}
               </Text>
               <Text style={styles.cuveeDetail} key={`vintage_${state.cuvee.id}`}>
-                title
+                vintage
                 {state.cuvee.vintage}
               </Text>
               <Text style={styles.cuveeDetail} key={`see_${state.cuvee.id}`}>
@@ -122,6 +122,25 @@ export default function CuveeScreen({ route }) {
               <Pressable style={styles.button}>
                 <Text style={styles.buttonText}>ADD TO FAVORITES</Text>
               </Pressable>
+              <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>ADD TO DRUNK</Text>
+              </Pressable>
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
+              <Text />
             </View>
           )}
         </ScrollView>

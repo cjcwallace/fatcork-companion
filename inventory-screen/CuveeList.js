@@ -10,14 +10,13 @@ import {
 } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
+import AuthContext from '../store/global/state';
+import { BACKEND_URL } from '../config';
 import { inventoryReducer } from '../store/global/reducer';
 import styles from './styles';
-import { BACKEND_URL } from '../config';
-import AuthContext from '../store/global/state';
 
 // import { SecureStoreEnum } from '../utils/SecureStore';
 
@@ -27,17 +26,11 @@ const initialState = {
   hasError: false,
 };
 
-export default function CuveeList() {
+export default function CuveeListScreen() {
   const navigation = useNavigation();
 
   const { state: authState } = React.useContext(AuthContext);
   const [state, dispatch] = React.useReducer(inventoryReducer, initialState);
-
-  // const cuveeList = React.useMemo(
-  //   ()
-  // )
-
-  // const [value, onChangeValue] = React.useState('Your value here');
 
   React.useEffect(() => {
     console.log(` token ${authState.token}`);
@@ -76,7 +69,7 @@ export default function CuveeList() {
     <>
       <SafeAreaView style={styles.topSafeArea} />
       {/* eslint-disable-next-line react/style-prop-object */}
-      <StatusBar style="light" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ecf0f1" />
       <SafeAreaView style={styles.container}>
         <KeyboardAwareScrollView
           style={styles.content}
@@ -118,6 +111,6 @@ export default function CuveeList() {
   );
 }
 
-CuveeList.propTypes = {
+CuveeListScreen.propTypes = {
   // navigation: PropTypes.func.isRequired,
 };

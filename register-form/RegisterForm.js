@@ -115,9 +115,9 @@ export default function RegisterForm() {
         {/* https://formik.org/docs/overview */}
         <Formik
           initialValues={{
-            firstName: 'cam',
-            lastName: 'wall',
-            email: '1231@me.com',
+            firstName: 'Bryan',
+            lastName: 'Maletis',
+            email: 'bryan@fatcork.com',
             password: 'password',
             confirmPassword: 'password',
           }}

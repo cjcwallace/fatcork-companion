@@ -19,7 +19,7 @@ const initialState = {
   hasError: false,
 };
 
-export default function VendorList() {
+export default function VendorListScreen() {
   const { state: authState } = React.useContext(AuthContext);
   const [state, dispatch] = React.useReducer(vendorReducer, initialState);
 
@@ -61,7 +61,7 @@ export default function VendorList() {
     <>
       <SafeAreaView style={styles.topSafeArea} />
       {/* eslint-disable-next-line react/style-prop-object */}
-      <StatusBar style="light" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ecf0f1" />
       <SafeAreaView style={styles.container}>
         <KeyboardAwareScrollView
           style={styles.content}
