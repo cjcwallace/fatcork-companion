@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import {
   authActionTypes,
   cuveeActionTypes,
+  favoriteCuveeActionTypes,
   inventoryActionTypes,
   vendorActionTypes,
 } from './actions';
@@ -138,6 +139,34 @@ export const vendorReducer = (state, action) => {
         vendors: action.payload,
       };
     case vendorActionTypes.FAILURE:
+      console.log('vendor failure');
+      return {
+        ...state,
+        hasError: true,
+        isFetching: false,
+      };
+    default:
+      return state;
+  }
+};
+
+export const favoriteCuveesReducer = (state, action) => {
+  switch (action.type) {
+    case favoriteCuveeActionTypes.REQUEST:
+      console.log('vendor request');
+      return {
+        ...state,
+        isFetching: true,
+        hasError: false,
+      };
+    case favoriteCuveeActionTypes.SUCCESS:
+      console.log('vendor success');
+      return {
+        ...state,
+        isFetching: false,
+        vendors: action.payload,
+      };
+    case favoriteCuveeActionTypes.FAILURE:
       console.log('vendor failure');
       return {
         ...state,
