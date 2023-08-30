@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -8,9 +9,10 @@ import Constants from 'expo-constants';
 const HEADER_BACKGROUND = '#3498db';
 const CONTENT_BACKGROUND = '#f9f9f9';
 
-// const dimensions = Dimensions.get('window');
-// const imageHeight = Math.round(dimensions.width * 9 / 16);
-// const imageWidth = dimensions.width;
+const dimensions = Dimensions.get('window');
+const screenHeight = dimensions.height;
+const imageHeight = Math.round(dimensions.width * (9 / 16));
+const imageWidth = dimensions.width;
 
 const styles = StyleSheet.create({
   topSafeArea: {
@@ -93,6 +95,24 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     marginLeft: 10,
     marginRight: 10,
+  },
+
+  cuveeContainer: {
+    width: imageWidth,
+    height: screenHeight,
+  },
+  cuveeView: {
+    width: imageWidth,
+  },
+  singleCuveeMainImage: {
+    width: imageWidth,
+    height: 400,
+    // flex: 1,
+    resizeMode: 'contain',
+  },
+  cuveeDetail: {
+    textAlign: 'left',
+    marginLeft: 20,
   },
 });
 
